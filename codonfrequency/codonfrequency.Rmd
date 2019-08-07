@@ -1,0 +1,73 @@
+---
+title: "genomfrequency"
+output:
+  html_document:
+    df_print: paged
+---
+##MAKE CODON FREQUENCY TABLE WITH THE TXT FORMAT CODON SEQUENCE DATA
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##UPLOAD DATA 
+Upload data with getwd() and setwd() funcitons. We used realines() funciton for txt format data .
+
+```{r data}
+getwd()
+setwd("C:/Users/ALEYNA/Desktop")
+
+#Bacteria1
+bacteria1 <- readLines("bacteria1.txt")
+
+#Virus1
+virus1 <- readLines("virus1.txt")
+
+#fungi1
+fungi1 <- readLines("fungi1.txt")
+
+```
+##EDITING FILES
+With paste() function we  
+```{r strsplit}
+#Bacteria1
+bacteria1 <- paste(bacteria1[1:100], collapse="")
+bacteria1 <- strsplit(bacteria1, "")[[1]]
+bacteria1<-table(bacteria1)
+bacteria1
+
+#Virus1
+virus1 <- paste(virus1[1:100], collapse ="")
+virus1 <- strsplit(virus1, "")[[1]]
+virus1<-table(virus1)
+virus1
+
+
+#Fungi1
+fungi1 <- paste(fungi1[2:80], collapse = "")
+fungi1 <- strsplit(fungi1, "")[[1]]
+fungi1 <- toupper(fungi1)
+fungi1<-table(fungi1)
+fungi1
+```
+
+
+
+```{r matrix}
+as.matrix(bacteria1)
+as.matrix(virus1)
+as.matrix(fungi1)
+```
+
+
+```{r plot}
+library(latticeExtra)
+colors = c("green","orange","brown","purple")
+species<- c("bacteria1","virus1","fungi1")
+regions<- c("A","G","T","C")
+Values <- matrix(c(bacteria1, virus1, fungi1), nrow = 4, ncol = 3, byrow = TRUE)
+barplot(Values, main = "GenomFrequency", names.arg = species,ylim = c(0,10000), xlab = "Species", ylab = "Freq", col = colors)
+legend("topleft", regions, horiz = TRUE, cex = 0.8, fill = colors)
+```
+
+
+
