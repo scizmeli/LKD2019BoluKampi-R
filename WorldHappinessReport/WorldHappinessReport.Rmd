@@ -1,0 +1,99 @@
+---
+title: "ggplotly geoms"
+author: "Hilal Kara"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    social: menu
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(plotly)
+library(plyr)
+library(flexdashboard)
+library(knitr)
+library(vcd)
+setwd("C:/Users/Lenovo/Documents/R-Workspace/LKD2019BoluKampi-R/WorldHappinessReport")
+happines <- read.csv(file = "2015.csv", header = T, sep = ",",nrows = 100)
+```
+
+geom_point
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Scatter Chart with geom_point
+
+```{r}
+p <- ggplot(data=happines, aes(x = Economy..GDP.per.Capita., y=Happiness.Score, color=Region)) +
+            geom_point(shape=1) +
+            geom_smooth(color = 'blue',method = "lm")
+ggplotly(p)
+```
+
+
+### Bolgelere gore ekonomik ortalama
+
+```{r}
+het<-tapply(happines$Economy..GDP.per.Capita., happines$Region, mean)
+kable(het)
+```
+
+Row
+-----------------------------------------------------------------------
+
+### geom_smooth with Loess Smoothed Fit
+
+```{r}
+p1 <- ggplot(data=happines, aes(x = Health..Life.Expectancy., y=Happiness.Score, color=Region)) +
+            geom_point(shape=1,size=1.5) +
+            geom_smooth(color = 'blue', method = "lm")
+ggplotly(p1)
+```
+
+### Bolgelere gore saglik duzeyi ortalamasi
+
+```{r}
+hht<-tapply(happines$Health..Life.Expectancy.,happines$Region,mean)
+kable(hht)
+```
+
+geom_density
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Western Europe
+
+```{r}
+d1<-happines[happines$Region=="Western Europe",]
+kable(d1, caption = "Western Europe")
+```
+
+### Add Conditional Density Curves to Plot
+
+```{r}
+d2p<-ggplot(data=d1, aes(Country,Freedom, fill= Happiness.Score ))+ geom_bar(stat = "identity", position = "dodge") 
+ggplotly(d2p)
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Middle East and Northern Africa
+
+```{r}
+d2<-happines[happines$Region=="Middle East and Northern Africa",]
+kable(d2, caption = "Middle East and Northern Africa")
+```
+
+### Density and Scatterplot Overlay Using geom_density
+
+```{r}
+d22p<-ggplot(data=d2, aes(Country,Freedom, fill=Happiness.Score ))+ geom_bar(position = "dodge",stat = "identity") 
+ggplotly(d22p)
+```
